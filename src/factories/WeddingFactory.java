@@ -18,7 +18,9 @@ public class WeddingFactory implements EventFactory {
         EventComponent ceremony = new Event("Церемония");
         EventComponent banquet = new Event("Банкет");
         EventComponent photoSession = new Event("Фотосессия");
-     // Создаем работника для мероприятия "фотосессия" с профессией из фабрики
+    
+        
+        // Создаем работника для мероприятия "фотосессия" с профессией из фабрики
         Worker worker = new Worker("", TypeWorker.PHOTOGRAPHER);
         photoSession = new WorkerDecorator(photoSession, worker);
         

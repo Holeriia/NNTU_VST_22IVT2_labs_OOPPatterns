@@ -5,6 +5,9 @@ import classes.Event;
 import classes.EventComponent;
 import factories.EventFactory;
 import factories.WeddingFactory;
+import VenueFabrik.VenueFabrikInterface;
+import VenueFabrik.Open_VenueFabrik;
+import VenueFabrik.Closed_VenueFabrik;
 
 public class main_app {
 
@@ -16,22 +19,25 @@ public class main_app {
 //		e.add(e1);		
 //		e.add(e2);
 //		e.display();
-//		EventComponent e0 = new CompositeEvent("start");
-//		e0.add(e);
-//		e0.display();
 //		System.out.println();
 		
-		 EventFactory weddingFactory = new WeddingFactory();
-
-	        // Создание свадьбы через фабрику
-	    EventComponent weddingEvent = weddingFactory.createEvent();
-
-	        // Добавление гостей к свадьбе
-	       // weddingEvent.addGuest(new Guest("John"));
-	        //weddingEvent.addGuest(new Guest("Alice"));
-
-	        // Отображение свадьбы
-	        weddingEvent.display();
+//		 EventFactory weddingFactory = new WeddingFactory();
+//
+//	        // Создание свадьбы через фабрику
+//	    EventComponent weddingEvent = weddingFactory.createEvent();
+//
+//	        // Добавление гостей к свадьбе
+//	       // weddingEvent.addGuest(new Guest("John"));
+//	        //weddingEvent.addGuest(new Guest("Alice"));
+//
+//	        // Отображение свадьбы
+//	        weddingEvent.display();
+		VenueFabrikInterface fabric = new Open_VenueFabrik();
+		EventComponent venue = fabric.createVenue();
+		venue.display();
+		VenueFabrikInterface fabric1 = new Closed_VenueFabrik();
+		EventComponent venue1 = fabric1.createVenue();
+		venue1.display();
 	}
 
 }
