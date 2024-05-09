@@ -19,7 +19,7 @@ public class main_app {
 //		e.add(e1);		
 //		e.add(e2);
 //		e.display();
-		System.out.println();
+		//System.out.println();
 		
 //		 EventFactory weddingFactory = new WeddingFactory();
 //
