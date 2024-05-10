@@ -6,7 +6,7 @@ import Venue.VenueInterface;
 
 public class Castom_VenueFabrik implements VenueFabrikInterface{
 	
-	public VenueInterface createVenue(String name, int copasity, Type_Venue Type){
+	public VenueInterface createCastomVenue(String name, int copasity, Type_Venue Type){
 		Castom_Venue venue = new Castom_Venue();
 		venue.setName(name);
 		venue.setCopacity(copasity);
