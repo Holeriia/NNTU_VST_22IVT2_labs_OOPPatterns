@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Banquet implements EventComponent{
-	private String name;
-	private int number_of_guests;
+	private String name;						//название события
+	private int number_of_guests;				//количество гостей
 	private List<EventComponent> components;
 	
-	
+//конструктор
 	public Banquet(int number_of_guests) {
 		super();
 		this.name = "Банкет";
 		this.number_of_guests = number_of_guests;
 	}
 
-
+//Геттеры и сетторы
 	public String getName() {
 		return name;
 	}
@@ -27,8 +27,12 @@ public class Banquet implements EventComponent{
 	public void setNumber_of_guests(int number_of_guests) {
 		this.number_of_guests = number_of_guests;
 	}
+	
 
 
+	
+	
+//Переопределение методов интерфейса
 	@Override
 	public void display() {
 		System.out.println("Event{" + name + " number of guests: " + number_of_guests + "}");		

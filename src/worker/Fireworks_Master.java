@@ -13,20 +13,6 @@ public class Fireworks_Master extends Worker{
 		this.name = name;
 		TypeWorker = "Фейверк-мастер";
 	}
-	public void addBooking(Booking book) {
-		list.add(book);		
-	}
-	public void removeBooking(Booking book) {
-		list.remove(book);		
-	}
-	@Override
-	public void display() {
-		System.out.println(TypeWorker + name);
-		if(components != null) {
-			for (EventComponent component : components) {
-		         component.display();
-		     }
-		}
-		
-	}
+	
+	
 }

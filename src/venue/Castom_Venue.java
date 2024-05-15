@@ -1,10 +1,10 @@
 package venue;
 
+//Класса для ввода площадок не включенных в основной список площадок компании
 public class Castom_Venue  extends VenueInterface{
-
-	
+//Конструктор
 	public Castom_Venue() {}
-	
+//Сетторы
 	public void setName(String name) {
 		this.name = name;
 	}

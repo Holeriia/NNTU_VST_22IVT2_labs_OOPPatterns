@@ -15,13 +15,32 @@ public abstract class VenueInterface implements EventComponent{
 	protected List<Booking> list = new ArrayList<>();
 	protected List<EventComponent> components;
 	
+//Методы для добавления и удаления бронирования
 	public void addBooking(Booking book) {
 		this.list.add(book);		
 	}
 	public void removeBooking(Booking book) {
 		this.list.remove(book);		
 	}
+
+//Геттер 
+	public String getname() {
+		return name;
+	}
+	public Type_Venue getType() {
+		return Type;
+	}
+	public int getCapacity() {
+		return capacity;
+	}
+	public List<Booking> getList() {
+		return list;
+	}
+	public List<EventComponent> getComponents() {
+		return components;
+	}
 	
+	//Вывод в консоль 
 	public void display() {
 		System.out.println("Площадка:" + name);
 		System.out.println("Вместимость:" + capacity);
@@ -39,7 +58,8 @@ public abstract class VenueInterface implements EventComponent{
 		}
 		
 	}
-	// Метод для проверки возможности бронирования в определенное время
+
+// Метод для проверки возможности бронирования в определенное время
     public boolean isBookingAvailable(LocalDateTime startTime, LocalDateTime endTime) {
         for (Booking booking : list) {
             if (booking.getStartTime().isBefore(endTime) && booking.getEndTime().isAfter(startTime)) {
@@ -52,6 +72,7 @@ public abstract class VenueInterface implements EventComponent{
         return true;
     }
     
+//Методы для добавления и удаления элементов событий 
     @Override
 	public void add(EventComponent component) {
 		if(components == null) {
@@ -66,6 +87,10 @@ public abstract class VenueInterface implements EventComponent{
 			components.remove(component);
 		}
 		
+	}
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 	

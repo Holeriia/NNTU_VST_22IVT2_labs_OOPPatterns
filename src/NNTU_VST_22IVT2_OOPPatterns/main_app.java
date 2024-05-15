@@ -7,6 +7,7 @@ import event.Fireworks;
 import eventFactory.EventFactory;
 import eventFactory.WeddingFactory;
 import venue.Type_Venue;
+import venue.VenueInterface;
 import venueFactory.Castom_VenueFabrik;
 import venueFactory.Closed_VenueFabrik;
 import venueFactory.Open_VenueFabrik;
@@ -14,8 +15,12 @@ import venueFactory.VenueFabrikInterface;
 import worker.Phtographer;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import Booking.Booking;
+import Guest.EventObserver;
+import Guest.Guest;
 
 public class main_app {
 
@@ -32,15 +37,27 @@ public class main_app {
 	    
 	    ph.addBooking(event);
 		
-		
+	    e.setBook(event);
+	    VenueFabrikInterface fabric3 = new Castom_VenueFabrik();
+	    VenueInterface venue2 = fabric3.createVenue("Килька бар", 1000, Type_Venue.Closed);
+		e.setVenue(venue2);
+		//System.out.print(e.getVenue().getname());
 		
 		e.add(e1);		
 		e.add(e2);
-		e1.add(ph);
-		e.display();
+		e.add(ph);
+		//e.display();
 //		ph.checkBooking();
 		
-		
+		List<EventObserver> guests = new ArrayList<>();
+		// Создание нескольких гостей в цикле
+        for (int i = 1; i <= 5; i++) {
+            Guest guest = new Guest("Гость " + i);
+            guests.add(guest);
+        }
+        
+        e.addObserver(guests);
+        e.notifyObservers();
 	
 		
 ////Создание помещений пример:

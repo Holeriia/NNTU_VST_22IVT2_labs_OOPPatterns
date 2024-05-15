@@ -3,6 +3,7 @@ package workerFactory;
 import worker.Fireworks_Master;
 import worker.Phtographer;
 
+//конкретная фабрика для создания рабочих
 public class DefaultWorkerFactory extends Worker_Factory{
 
 
