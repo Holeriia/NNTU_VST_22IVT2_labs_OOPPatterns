@@ -1,4 +1,5 @@
 package baseclasses;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import baseclasses.events.EventComponent;
@@ -18,7 +19,8 @@ public class Booking {
         this.endTime = endTime;
     }
 
-// Геттеры и сеттеры для времени начала и конца
+
+	// Геттеры и сеттеры для времени начала и конца
     public LocalDateTime getStartTime() {
         return startTime;
     }

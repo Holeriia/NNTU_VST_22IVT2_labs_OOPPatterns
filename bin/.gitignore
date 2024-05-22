@@ -1,6 +1,7 @@
-/event/
-/venue/
-/venueFactory/
-/NNTU_VST_22IVT2_OOPPatterns/
-/workerFactory/
-/worker/
+/commands/
+/baseclasses/
+/concreteclasses/
+/command/
+/mainAPP/
+/decorators/
+/observer/

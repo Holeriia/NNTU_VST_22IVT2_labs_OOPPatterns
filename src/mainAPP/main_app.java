@@ -2,80 +2,112 @@ package mainAPP;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import baseclasses.Booking;
+
 import baseclasses.events.CompositeEvent;
 import baseclasses.events.EventComponent;
-import baseclasses.factories.VenueFabrikInterface;
+import baseclasses.events.SimpleEvent;
+import observer.Editor;
+import baseclasses.Booking;
+
 import baseclasses.guests.Guest;
-import baseclasses.venues.Type_Venue;
-import baseclasses.venues.VenueInterface;
-import concreteclasses.events.Banquet;
-import concreteclasses.events.Fireworks;
-import concreteclasses.venuefactories.Castom_VenueFabrik;
-import concreteclasses.workers.Phtographer;
-import observer.EventObserver;
+import baseclasses.orders.Order;
+import baseclasses.orders.StatusType;
+import decorators.GuestDecorator;
+
+import baseclasses.venues.Location;
+import decorators.LocationDecorator;
+import baseclasses.venues.LocationType;
+import concreteclasses.venues.WeddingHall;
+import concreteclasses.venues.OutdoorVenue;
+
+import baseclasses.workers.Worker;
+import decorators.WorkerDecorator;
+import baseclasses.workers.WorkerType;
+import command.BookingSystem;
+import command.Command;
+import command.concretecommands.ChangeMainEventCommand;
+import command.concretecommands.CreateOrderCommand;
+import command.concretecommands.RemoveMainEventCommand;
+import concreteclasses.workers.Fireworks_Master;
+import concreteclasses.workers.Photographer;
+
+import baseclasses.factories.EventFactory;
+
+import concreteclasses.eventfactories.*;
+import concreteclasses.statusTypes.Active;
 
 public class main_app {
 
 	public static void main(String[] args) {
-		
-		CompositeEvent e = new CompositeEvent("Wedding");
-		EventComponent e1 = new Fireworks(123);
-		EventComponent e2 = new Banquet(58);
-		Phtographer ph = new Phtographer("Bad");
-		
-		LocalDateTime start = LocalDateTime.of(2024, 5, 10, 10, 0);
-		LocalDateTime end = LocalDateTime.of(2024, 5, 10, 12, 0);
-	    Booking event = new Booking(start, end, e1);
-	    
-	    ph.addBooking(event);
-		
-	    e.setBook(event);
-	    VenueFabrikInterface fabric3 = new Castom_VenueFabrik();
-	    VenueInterface venue2 = fabric3.createVenue("Килька бар", 1000, Type_Venue.Closed);
-		e.setVenue(venue2);
-		//System.out.print(e.getVenue().getname());
-		
-		e.add(e1);		
-		e.add(e2);
-		e.add(ph);
-		//e.display();
-//		ph.checkBooking();
-		
-		List<EventObserver> guests = new ArrayList<>();
-		// Создание нескольких гостей в цикле
-        for (int i = 1; i <= 5; i++) {
-            Guest guest = new Guest("Гость " + i);
-            guests.add(guest);
-        }
-        
-        e.addObserver(guests);
-        e.notifyObservers();
-	
-		
-////Создание помещений пример:
-//		VenueFabrikInterface fabric = new Open_VenueFabrik();
-//		EventComponent venue = fabric.createVenue();
-//		venue.display();
-//		
-//		VenueFabrikInterface fabric1 = new Closed_VenueFabrik();
-//		EventComponent venue1 = fabric1.createVenue();
-//		venue1.display();
-//		
-//		VenueFabrikInterface fabric3 = new Castom_VenueFabrik();
-//		EventComponent venue2 = fabric3.createCastomVenue("Килька бар", 1000, Type_Venue.Closed);
-//		venue2.display();
-		
+		// Создание редактора
+		Editor editor = new Editor();
 
-	
-	
-//    // Пример использования класса Booking
-//    LocalDateTime start = LocalDateTime.of(2024, 5, 10, 10, 0);
-//    LocalDateTime end = LocalDateTime.of(2024, 5, 10, 12, 0);
-//    Booking event = new Booking(start, end, venue2);
-//    System.out.println("Event details: " + event);	
-//	
-	}	
+        // Создание фабрик и событий
+        CeremonyFactory ceremonyFactory = new CeremonyFactory();
+        BanquetFactory banquetFactory = new BanquetFactory();
+        PhotoSessionFactory photoSessionFactory = new PhotoSessionFactory();
+
+        EventComponent ceremony = ceremonyFactory.createEvent();
+        EventComponent banquet = banquetFactory.createEvent();
+        EventComponent photoSession = photoSessionFactory.createEvent();
+        
+        // Добавление гостей
+        Guest guest1 = new Guest("Иван Иванов");
+        Guest guest2 = new Guest("Мария Петрова");
+        List<Guest> guests = Arrays.asList(guest1, guest2);
+
+        //editor.addGuestsToEvent(ceremony, guests);
+        editor.addGuestsToEvent(banquet, guests);
+
+        // Создание работника и типа работника
+        WorkerType photographerType = new Photographer();
+        Worker worker2 = new Worker("Дима Биткин", photographerType);
+
+        // Создание бронирования
+        LocalDateTime start = LocalDateTime.of(2024, 5, 10, 10, 0);
+        LocalDateTime end = LocalDateTime.of(2024, 5, 10, 12, 0);
+        Booking booking = new Booking(start, end, photoSession);
+
+        // Назначение работника на событие
+        editor.bookEventForWorker(booking, photographerType, worker2);
+
+        // Отображение активных бронирований
+        worker2.showActiveBookings();
+
+        // Пример отображения
+        CompositeEvent wedding = new CompositeEvent("Свадьба");
+       wedding.add(ceremony);
+       wedding.add(banquet);
+       wedding.add(photoSession);
+       
+       BookingSystem bookingSystem = new BookingSystem();
+
+       //CompositeEvent mainEvent = new CompositeEvent("Main Event");
+       StatusType activeStatus = new Active();
+
+       // Создание команды для создания заказа
+       Command createOrderCommand = new CreateOrderCommand(bookingSystem, "Заказ 1", wedding, "Валерия Серова", LocalDateTime.now(), activeStatus);
+       bookingSystem.executeCommand(createOrderCommand);
+
+       // Получаем созданный заказ из списка заказов
+       Order order = bookingSystem.getOrders().get(0);
+
+       // Создание команды для изменения основного мероприятия заказа
+       CompositeEvent newEvent = new CompositeEvent("Новый план");
+       Command changeEventCommand = new ChangeMainEventCommand(order, newEvent);
+       bookingSystem.executeCommand(changeEventCommand);
+
+       // Отмена команды изменения мероприятия
+       bookingSystem.undoLastCommand();
+
+       // Создание команды для удаления основного мероприятия заказа
+       Command removeEventCommand = new RemoveMainEventCommand(order);
+       bookingSystem.executeCommand(removeEventCommand);
+
+       // Отмена команды удаления мероприятия
+       bookingSystem.undoLastCommand();
+	}
 }

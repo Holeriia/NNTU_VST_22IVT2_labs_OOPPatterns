@@ -1,14 +1,11 @@
 package concreteclasses.workers;
 
-import baseclasses.workers.Worker;
+import baseclasses.workers.WorkerType;
 
-public class Fireworks_Master extends Worker{
-	
-	public Fireworks_Master(String name) {
-		super();
-		this.name = name;
-		TypeWorker = "Фейверк-мастер";
-	}
-	
-	
+public class Fireworks_Master implements WorkerType{
+
+	@Override
+    public String getType() {
+        return "Fireworks Master";
+    }	
 }
