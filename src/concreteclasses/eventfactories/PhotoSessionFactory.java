@@ -26,7 +26,11 @@ public class PhotoSessionFactory implements EventFactory {
 
         WorkerType photographerType = new Photographer();
         Worker actualPhotographer = new Worker("", photographerType);
+        
+        WeddingHallFactory weddingHallFactory = new WeddingHallFactory();
+        Location weddingHall = weddingHallFactory.createLocation("", 0);
 
+        locationDecorator.setLocation(weddingHall);
         workerDecorator.add(actualPhotographer);
 
         // Return the top-most decorator

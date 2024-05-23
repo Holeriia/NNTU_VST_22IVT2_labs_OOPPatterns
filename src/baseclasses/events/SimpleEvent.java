@@ -1,5 +1,8 @@
 package baseclasses.events;
 
+import java.util.Collections;
+import java.util.List;
+
 public class SimpleEvent implements EventComponent {
     private String name;
 
@@ -26,4 +29,9 @@ public class SimpleEvent implements EventComponent {
     public String getName() {
         return name;
     }
+
+	@Override
+	public List<EventComponent> getSubEvents() {
+		return Collections.emptyList();
+	}
 }

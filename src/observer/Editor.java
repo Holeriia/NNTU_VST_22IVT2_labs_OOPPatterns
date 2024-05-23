@@ -143,6 +143,32 @@ public class Editor implements Subject {
         locationDecorator.setLocation(location);
         addBooking(booking, location);
     }
+    
+    public void removeWorkerFromEvent(EventComponent event, Worker worker) {
+        WorkerDecorator workerDecorator = findWorkerDecorator(event);
+
+        if (workerDecorator == null) {
+            System.out.println("The event does not have a WorkerDecorator.");
+            return;
+        }
+
+        workerDecorator.remove(worker);
+        unsubscribeFromWorkers(worker);
+        notifyGuestObservers("Работник \"" + worker.getName() + "\" удален с мероприятия \"" + event.getName() + "\"");
+        System.out.println("Работник \"" + worker.getName() + "\" удален с мероприятия \"" + event.getName() + "\".");
+    }
+
+    public void removeLocationFromEvent(EventComponent event, Location location) {
+        LocationDecorator locationDecorator = findLocationDecorator(event);
+
+        if (locationDecorator == null) {
+            System.out.println("The event does not have a LocationDecorator.");
+            return;
+        }
+
+        locationDecorator.setLocation(null);
+        System.out.println("Локация \"" + location.getName() + "\" удалена с мероприятия \"" + event.getName() + "\".");
+    }
 
     public void addGuestToEvent(EventComponent event, Guest guest) {
         GuestDecorator guestDecorator = findGuestDecorator(event);
@@ -161,6 +187,19 @@ public class Editor implements Subject {
             addGuestToEvent(event, guest);
         }
         notifyGuestObservers("Вы приглашен(-ы) на мероприятие \"" + event.getName() + "\"");
+    }
+    
+    public void removeGuestFromEvent(EventComponent event, Guest guest) {
+        GuestDecorator guestDecorator = findGuestDecorator(event);
+
+        if (guestDecorator == null) {
+            System.out.println("The event does not have a GuestDecorator.");
+            return;
+        }
+
+        guestDecorator.remove(guest);
+        unsubscribeFromGuests(guest);
+        System.out.println("Гость \"" + guest.getName() + "\" удален с мероприятия \"" + event.getName() + "\".");
     }
 
     private WorkerDecorator findWorkerDecorator(EventComponent event) {

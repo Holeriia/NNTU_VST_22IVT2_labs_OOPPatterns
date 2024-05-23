@@ -30,6 +30,7 @@ import command.BookingSystem;
 import command.Command;
 import command.concretecommands.ChangeMainEventCommand;
 import command.concretecommands.CreateOrderCommand;
+import command.concretecommands.PrintScheduleCommand;
 import command.concretecommands.RemoveMainEventCommand;
 import concreteclasses.workers.Fireworks_Master;
 import concreteclasses.workers.Photographer;
@@ -38,6 +39,7 @@ import baseclasses.factories.EventFactory;
 
 import concreteclasses.eventfactories.*;
 import concreteclasses.statusTypes.Active;
+import concreteclasses.venuefactories.WeddingHallFactory;
 
 public class main_app {
 
@@ -65,18 +67,24 @@ public class main_app {
         // Создание работника и типа работника
         WorkerType photographerType = new Photographer();
         Worker worker2 = new Worker("Дима Биткин", photographerType);
+        
+        //Создание локации и типа локации
+        WeddingHallFactory weddingHallFactory = new WeddingHallFactory();
+        Location weddingHall = weddingHallFactory.createLocation("Место венчания", 200);
 
         // Создание бронирования
         LocalDateTime start = LocalDateTime.of(2024, 5, 10, 10, 0);
         LocalDateTime end = LocalDateTime.of(2024, 5, 10, 12, 0);
         Booking booking = new Booking(start, end, photoSession);
 
-        // Назначение работника на событие
+        // Назначение работника и мероприятия на событие
         editor.bookEventForWorker(booking, photographerType, worker2);
+        editor.bookEventForLocation(booking, weddingHall.getType(), weddingHall);
 
         // Отображение активных бронирований
         worker2.showActiveBookings();
-
+        weddingHall.showActiveBookings();
+        
         // Пример отображения
         CompositeEvent wedding = new CompositeEvent("Свадьба");
        wedding.add(ceremony);
@@ -109,5 +117,13 @@ public class main_app {
 
        // Отмена команды удаления мероприятия
        bookingSystem.undoLastCommand();
+       
+    // Создание экземпляра команды для вывода расписания
+       Command printScheduleCommand = new PrintScheduleCommand(order);
+       
+       System.out.println("Количество подсобытий у основного события 'Свадьба': " + wedding.getSubEvents().size());
+
+       // Выполнение команды
+       bookingSystem.executeCommand(printScheduleCommand);
 	}
 }

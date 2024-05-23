@@ -28,6 +28,10 @@ public class CompositeEvent implements EventComponent {
             event.display();
         }
     }
+    
+    public List<EventComponent> getSubEvents() {
+        return subEvents;
+    }
 
     @Override
     public String getName() {

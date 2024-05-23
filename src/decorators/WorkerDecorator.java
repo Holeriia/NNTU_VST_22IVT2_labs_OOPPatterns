@@ -33,4 +33,8 @@ public class WorkerDecorator extends EventDecorator{
             System.out.println("- " + worker.getName() + " (" + worker.getTypeWorker().getType() + ")");
         }
     }
+    
+    public List<EventComponent> getSubEvents() {
+        return component.getSubEvents();
+    }
 }

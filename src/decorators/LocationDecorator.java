@@ -1,6 +1,9 @@
 package decorators;
 
 import baseclasses.venues.Location;
+
+import java.util.List;
+
 import baseclasses.events.EventComponent;
 
 
@@ -25,5 +28,9 @@ public class LocationDecorator extends EventDecorator {
         if (location != null) {
             System.out.println("Локация: " + location.getName());
         }
+    }
+    
+    public List<EventComponent> getSubEvents() {
+        return component.getSubEvents();
     }
 }

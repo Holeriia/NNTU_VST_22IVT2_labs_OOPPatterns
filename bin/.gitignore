@@ -1,7 +1,6 @@
-/commands/
-/baseclasses/
+/mainAPP/
+/observer/
+/decorators/
 /concreteclasses/
 /command/
-/mainAPP/
-/decorators/
-/observer/
+/baseclasses/

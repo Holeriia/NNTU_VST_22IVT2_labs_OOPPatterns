@@ -41,5 +41,10 @@ public class GuestDecorator extends EventDecorator{
     public String getName() {
         return component.getName();
     }
+    
+    @Override
+    public List<EventComponent> getSubEvents() {
+        return component.getSubEvents();
+    }
 
 }
