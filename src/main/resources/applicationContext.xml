@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--     создание бинов -->
+    
+    
+    <bean id="compositeEvent" 
+		scope="prototype"
+    	class="baseclasses.events.CompositeEvent"/>  
+    	
+    <bean id="booking" 
+		scope="prototype"
+    	class="baseclasses.Booking"/>
+   
+   	<bean id="guest" 
+   		scope="prototype"
+    	class="baseclasses.guests.Guest"/>
+    	
+    <bean id="location" 
+   		scope="prototype"
+    	class="baseclasses.venues.location"/>
+    	
+    <bean id="worker" 
+   		scope="prototype"
+    	class="baseclasses.workers.Worker"/>
+   
+    <bean id="active" 
+   		scope="prototype"
+    	class="concreteclasses.statusTypes.Active"/>
+    <bean id="cancel" 
+   		scope="prototype"
+    	class="concreteclasses.statusTypes.Cancel"/>
+    <bean id="waitPayment" 
+   		scope="prototype"
+    	class="concreteclasses.statusTypes.WaitPayment"/>
+    	
+    	
+	<bean id="simpleEvent" 
+   		scope="prototype"
+    	class="baseclasses.events.SimpleEvent"/> 	
+    
+    <bean id="commandHistory" 
+    	class="command.CommandHistory" 
+    	scope="prototype"/>
+    	
+    <!-- Определение бина для Invoker -->
+    <bean id="invoker" 
+    	scope="prototype"
+    	class="command.Invoker">
+        <constructor-arg ref="commandHistory"/>
+    </bean>
+    
+    <!-- Определение бина для BookingSystem -->
+    <bean id="bookingSystem" 
+   		scope="prototype"
+    	class="command.BookingSystem">
+        <constructor-arg ref="commandHistory"/>
+    </bean>
+    
+    
+    <!-- Определение бина для BanquetFactory -->
+    <bean id="banquetFactory" 
+    	scope="prototype"
+    	class="concreteclasses.eventfactories.BanquetFactory" />
+    	
+    <!-- Определение бина для CeremonyFactory -->
+    <bean id="ceremonyFactory" 
+    	scope="prototype"
+    	class="concreteclasses.eventfactories.CeremonyFactory" />
+    	
+    <!-- Определение бина для PhotoSessionFactory -->
+    <bean id="photoSessionFactory" 
+    	scope="prototype"
+    	class="concreteclasses.eventfactories.PhotoSessionFactory" />
+    	
+    	
+    	
+    	
+    <!-- Определение бина для OutdoorVenueFactory -->
+    <bean id="outdoorVenueFactory" 
+    	scope="prototype"
+    	class="concreteclasses.venuefactories.OutdoorVenueFactory" />
+    	
+    <!-- Определение бина для WeddingHallFactory -->
+    <bean id="weddingHallFactory" 
+    	scope="prototype"
+    	class="concreteclasses.venuefactories.WeddingHallFactory" />
+    
+    <!-- Определение бина для ChefFactory -->
+    <bean id="сhefFactory" 
+    	scope="prototype"
+    	class="concreteclasses.workerfactories.ChefFactory" />	
+    
+
+	<!-- Определение бина для FireworksMasterFactory -->
+    <bean id="fireworksMasterFactory" 
+    	scope="prototype"
+    	class="concreteclasses.workerfactories.FireworksMasterFactory" />	
+    
+    <!-- Определение бина для OfficiantFactory -->
+    <bean id="officiantFactory" 
+    	scope="prototype"
+    	class="concreteclasses.workerfactories.OfficiantFactory" />	
+    	
+    <!-- Определение бина для PhotographerFactory -->
+    <bean id="photographerFactory"
+   		scope="prototype" 
+    	class="concreteclasses.workerfactories.PhotographerFactory" />	
+    	
+    
+    <!-- Определение бина для Editor -->
+    <bean id="editor"
+   		scope="prototype" 
+    	class="observer.Editor" />
+    	
+    	
+    	
+    <!-- Определение бина для LoggingAspect -->
+    <bean id="loggingAspect" class="mainAPP.LoggingAspect" lazy-init="true"/>
+
+    <aop:config>
+        <aop:aspect ref="loggingAspect">
+            <aop:pointcut id="allMethodsIn" expression="execution(public * command..*.*(..))"/>
+            <aop:before method="logBefore" pointcut-ref="allMethodsIn"/>
+            <aop:after method="logAfter" pointcut-ref="allMethodsIn"/>
+        </aop:aspect>
+    </aop:config>	
+   
+</beans>
