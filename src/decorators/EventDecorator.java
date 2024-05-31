@@ -1,5 +1,7 @@
 package decorators;
 
+import java.util.List;
+
 import baseclasses.events.EventComponent;
 
 //базовый класс для декораторов
@@ -32,6 +34,11 @@ public abstract class EventDecorator implements EventComponent {
     
     public EventComponent getComponent() {
         return component;
+    }
+    
+    @Override
+    public List<EventComponent> getSubEvents() {
+        return component.getSubEvents();
     }
 }
 

@@ -1,8 +1,15 @@
 package mainAPP;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import baseclasses.Booking;
 import baseclasses.events.CompositeEvent;
@@ -27,77 +34,40 @@ import command.concretecommands.ChangeMainEventCommand;
 import command.concretecommands.CreateOrderCommand;
 import command.concretecommands.RemoveMainEventCommand;
 
+import multithreading.OrderManager;
+import multithreading.RequestProcessor;
+import multithreading.RequestQueue;
+
 public class test {
+    public static void main(String[] args) {
+        int requestCount = 15; // Количество заказов
 
-	public static void main(String[] args) {
-		
-		// Создание редактора
-				Editor editor = new Editor();
+        OrderManager orderManager = new OrderManager();
+        RequestQueue requestQueue = new RequestQueue();
+        AtomicBoolean running = new AtomicBoolean(true);
 
-		        // Создание фабрик и событий
-		        CeremonyFactory ceremonyFactory = new CeremonyFactory();
-		        BanquetFactory banquetFactory = new BanquetFactory();
-		        PhotoSessionFactory photoSessionFactory = new PhotoSessionFactory();
+        // Создание и запуск потоков-обработчиков
+        int nThreads = 4;
+        ExecutorService executor = Executors.newFixedThreadPool(nThreads);
 
-		        EventComponent ceremony = ceremonyFactory.createEvent();
-		        EventComponent banquet = banquetFactory.createEvent();
-		        EventComponent photoSession = photoSessionFactory.createEvent();
+        for (int i = 0; i < nThreads; i++) {
+            executor.submit(new RequestProcessor(requestQueue, i + 1, running));
+        }
 
-		        // Создание работника и типа работника
-		        WorkerType photographerType = new Photographer();
-		        Worker worker2 = new Worker("Дима Биткин", photographerType);
+        // Добавление запросов на обработку (писатели)
+        for (int i = 0; i < requestCount; i++) {
+            int orderId = i;
+            requestQueue.addRequest(() -> {
+                Order order = new Order("Order " + orderId, null, "Client" + orderId, LocalDateTime.now(), new Active());
+                orderManager.addOrder(order);
+            });
+        }
 
-		        // Создание бронирования
-		        LocalDateTime start = LocalDateTime.of(2024, 5, 10, 10, 0);
-		        LocalDateTime end = LocalDateTime.of(2024, 5, 10, 12, 0);
-		        Booking booking = new Booking(start, end, photoSession);
+        // Ожидание обработки всех заказов
+        requestQueue.awaitCompletion();
 
-		        // Назначение работника на событие
-		        editor.bookEventForWorker(booking, photographerType, worker2);
-
-		        // Отображение активных бронирований
-		        worker2.showActiveBookings();
-
-		        // Добавление гостей
-		        Guest guest1 = new Guest("Иван Иванов");
-		        Guest guest2 = new Guest("Мария Петрова");
-		        List<Guest> guests = Arrays.asList(guest1, guest2);
-
-		        editor.addGuestsToEvent(ceremony, guests);
-		        //editor.addGuestsToEvent(banquet, guests);
-
-		        // Пример отображения
-		        CompositeEvent wedding = new CompositeEvent("Свадьба");
-		       wedding.add(ceremony);
-		       wedding.add(banquet);
-		       wedding.add(photoSession);
-
-		BookingSystem bookingSystem = new BookingSystem();
-
-        //CompositeEvent mainEvent = new CompositeEvent("Main Event");
-        StatusType activeStatus = new Active();
-
-        // Создание команды для создания заказа
-        Command createOrderCommand = new CreateOrderCommand(bookingSystem, "Order 1", wedding, "Client 1", LocalDateTime.now(), activeStatus);
-        bookingSystem.executeCommand(createOrderCommand);
-
-        // Получаем созданный заказ из списка заказов
-        Order order = bookingSystem.getOrders().get(0);
-
-        // Создание команды для изменения основного мероприятия заказа
-        CompositeEvent newEvent = new CompositeEvent("New Main Event");
-        Command changeEventCommand = new ChangeMainEventCommand(order, newEvent);
-        bookingSystem.executeCommand(changeEventCommand);
-
-        // Отмена команды изменения мероприятия
-        bookingSystem.undoLastCommand();
-
-        // Создание команды для удаления основного мероприятия заказа
-        Command removeEventCommand = new RemoveMainEventCommand(order);
-        bookingSystem.executeCommand(removeEventCommand);
-
-        // Отмена команды удаления мероприятия
-        bookingSystem.undoLastCommand();
-        
-	}
+        // Остановка всех потоков
+        running.set(false);
+        executor.shutdown();
+    }
 }

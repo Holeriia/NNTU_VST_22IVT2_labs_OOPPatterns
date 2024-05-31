@@ -16,7 +16,7 @@ import decorators.LocationDecorator;
 import decorators.WorkerDecorator;
 import decorators.GuestDecorator;
 
-public class Editor implements Subject {
+public class Editor {
 	 private List<Observer> workerObservers = new ArrayList<>();
 	 private List<Observer> guestObservers = new ArrayList<>();
 
@@ -72,12 +72,10 @@ public class Editor implements Subject {
         }
     }
     
-    @Override
     public void unsubscribeFromWorkers(Observer observer) {
         workerObservers.remove(observer);
     }
 
-    @Override
     public void unsubscribeFromGuests(Observer observer) {
         guestObservers.remove(observer);
     }
